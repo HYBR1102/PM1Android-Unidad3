@@ -1,5 +1,6 @@
 package com.example.almacenamiento
 
+import android.content.ContentValues
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -34,9 +35,21 @@ class FirstFragment : Fragment() {
     private fun GuardarAlumno() {
         val dbHelper = context?.let { BDAlumnos(it) }
         val db = dbHelper?.writableDatabase
-        db?.execSQL("INSERT INTO Alumnos VALUES('${etControl.text}', '${etNombre.text}')")
+        //execSQL-----------------------------------------------------------------------------------
+        //db?.execSQL("INSERT INTO Alumnos VALUES('${etControl.text}', '${etNombre.text}')")
+
+        //insert------------------------------------------------------------------------------------
+        val values = ContentValues().apply {
+            put("control", etControl.text.toString())
+            put("nombre", etNombre.text.toString())
+        }
+        val newRowId = db?.insert("Alumnos", null, values)
+
+        etControl.text.clear()
+        etNombre.text.clear()
 
         view?. let { Snackbar.make(it, "¡Alumno guardado!", Snackbar.LENGTH_LONG).show() }
 
+        findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
     }
 }
